@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1557290996320.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1099614246",
+    "id" : "59F71F2D",
+    "lastKnownWriteTime" : 1557294839,
+    "last_content_update" : 1557294839239,
+    "path" : "~/Developing-Data-Products-Project/MPG vs HP Developing Data Products Project/index.Rmd",
+    "project_path" : "MPG vs HP Developing Data Products Project/index.Rmd",
+    "properties" : {
+        "cursorPosition" : "13,0",
+        "scrollLine" : "3"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
