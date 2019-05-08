@@ -5,15 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "1099614246",
+    "hash" : "4025434340",
     "id" : "59F71F2D",
-    "lastKnownWriteTime" : 1557294839,
-    "last_content_update" : 1557294839239,
+    "lastKnownWriteTime" : 1557298792,
+    "last_content_update" : 1557298792563,
     "path" : "~/Developing-Data-Products-Project/MPG vs HP Developing Data Products Project/index.Rmd",
     "project_path" : "MPG vs HP Developing Data Products Project/index.Rmd",
     "properties" : {
-        "cursorPosition" : "13,0",
-        "scrollLine" : "3"
+        "cursorPosition" : "31,19",
+        "scrollLine" : "23"
     },
     "read_only" : false,
     "read_only_alternatives" : [

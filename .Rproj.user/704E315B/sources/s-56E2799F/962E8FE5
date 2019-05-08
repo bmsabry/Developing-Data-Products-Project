@@ -5,13 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "24720004",
+    "hash" : "0",
     "id" : "962E8FE5",
-    "lastKnownWriteTime" : 1557206319,
-    "last_content_update" : 1557206319722,
+    "lastKnownWriteTime" : 1557296846,
+    "last_content_update" : 1557296846,
     "path" : "~/Developing-Data-Products-Project/ui.R",
     "project_path" : "ui.R",
     "properties" : {
+        "cursorPosition" : "0,0",
+        "scrollLine" : "0"
     },
     "read_only" : false,
     "read_only_alternatives" : [

@@ -70,10 +70,69 @@
 
 <slide class="class" id="id" style="background:;">
   <hgroup>
-    <h2>Slide 4</h2>
+    <h2>UI code Overview</h2>
   </hgroup>
   <article data-timings="">
-    <p>ui code</p>
+    <pre><code class="r">library(shiny); library(shinyhelper); library(magrittr)
+shinyUI(fluidPage(
+  titlePanel(&quot;Predict MPG from HP&quot;),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput(&quot;sliderHP&quot;, &quot;What is the HP of the car?&quot;, 50, 335, value = 150),
+      hr(),
+      uiOutput(outputId = &quot;dynamicUI&quot;),
+      hr()
+    ),
+    mainPanel(
+      plotOutput(&quot;plot1&quot;,click = &quot;plot_click&quot;),
+      verbatimTextOutput(&quot;info&quot;),
+      h3(&quot;Click on the points of interest to get the MPG and HP&quot;),
+      h4(&quot;Predicted MPG :&quot;),
+      textOutput(&quot;pred&quot;),
+      h4(&quot;Predicted Min MPG :&quot;),
+      textOutput(&quot;predmin&quot;),
+      h4(&quot;Predicted Max MPG :&quot;),
+      textOutput(&quot;predmax&quot;)
+    )
+  )
+))
+</code></pre>
+
+<p>&lt;!--html_preserve--&gt;<div class="container-fluid"></p>
+
+<h2>Predict MPG from HP</h2>
+
+<div class="row">
+<div class="col-sm-4">
+<form class="well">
+<div class="form-group shiny-input-container">
+<label class="control-label" for="sliderHP">What is the HP of the car?</label>
+<input class="js-range-slider" id="sliderHP" data-min="50" data-max="335" data-from="150" data-step="1" data-grid="true" data-grid-num="9.82758620689655" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
+</div>
+
+<hr/>
+
+<div id="dynamicUI" class="shiny-html-output"></div>
+
+<hr/>
+
+<p></form>
+</div></p>
+
+<div class="col-sm-8">
+<div id="plot1" class="shiny-plot-output" style="width: 100% ; height: 400px" data-click-id="plot_click" data-click-clip="TRUE"></div>
+<pre id="info" class="shiny-text-output noplaceholder"></pre>
+<h3>Click on the points of interest to get the MPG and HP</h3>
+<h4>Predicted MPG :</h4>
+<div id="pred" class="shiny-text-output"></div>
+<h4>Predicted Min MPG :</h4>
+<div id="predmin" class="shiny-text-output"></div>
+<h4>Predicted Max MPG :</h4>
+<div id="predmax" class="shiny-text-output"></div>
+</div>
+
+<p></div>
+</div>&lt;!--/html_preserve--&gt;</p>
 
   </article>
   <!-- Presenter Notes -->
@@ -81,10 +140,85 @@
 
 <slide class="class" id="id" style="background:;">
   <hgroup>
-    <h2>Slide 5</h2>
+    <h2>server.r code Sample</h2>
   </hgroup>
   <article data-timings="">
-    <p>server.r code</p>
+    <pre><code class="r">library(shiny)
+library(shinyhelper)
+library(magrittr)
+
+shinyServer(function(input, output,session) {
+  observe_helpers(withMathJax = TRUE)
+  require(splines)
+  model &lt;-lm(mpg~bs(hp,knots=c(100,200)),mtcars)
+  hp.lims=range(mtcars$hp)
+  hp.grid=seq(from=hp.lims[1],to=hp.lims[2])
+  preds=predict(model,newdata=list(hp=hp.grid),se=TRUE)
+  se.bands=cbind(preds$fit+3*preds$se,preds$fit-3*preds$se)
+
+  hpInput &lt;- reactive({
+    input$sliderHP})
+
+  modelpred &lt;- reactive({
+    predict(model, newdata = data.frame(hp = hpInput()))
+
+  })
+
+  modelpredmin &lt;- reactive({
+    predict(model, newdata = data.frame(hp = hpInput()))-3*preds$se[hpInput()-hp.lims[1]]
+
+  })
+
+  modelpredmax &lt;- reactive({
+    predict(model, newdata = data.frame(hp = hpInput()))+3*preds$se[hpInput()-hp.lims[1]]
+
+  })
+
+  output$plot1 &lt;- renderPlot({
+    plot(mtcars$hp, mtcars$mpg, xlab = &quot;HorsePower&quot;, 
+         ylab = &quot;mpg&quot;, bty = &quot;n&quot;, pch = 16,
+         xlim = c(50, 400), ylim = c(6, 40))
+     lines(hp.grid,preds$fit,col=&quot;blue&quot;,lwd=2)
+      abline(v=c(100,200),lty=2,col=&quot;blue&quot;)
+      matlines(hp.grid,se.bands,col=&quot;lightblue&quot;,lty =2)
+      abline(v=hpInput(),lty=2,col=&quot;red&quot;)
+ #      points(hpInput, modelpred(), col = &quot;red&quot;, pch = 16, cex = 2)
+
+  })
+
+  output$info &lt;- renderText({
+    paste0(&quot;x=&quot;, input$plot_click$x, &quot;\ny=&quot;, input$plot_click$y)
+  })
+
+  output$pred &lt;- renderText({
+    modelpred()
+  })
+
+  output$predmin &lt;- renderText({
+    modelpredmin()
+  })
+
+  output$predmax &lt;- renderText({
+    modelpredmax()
+  })
+
+  output$dynamicUI &lt;- renderUI({
+   h4(&quot;Click the help icon for current details...&quot;) %&gt;%
+     helper(icon = &quot;question&quot;,
+            colour = &quot;orange&quot;,
+            size = &quot;s&quot;,
+            type = &quot;inline&quot;,
+            title = &quot;Current Details&quot;,
+            content = c(&quot;&lt;/br&gt;This tool helps the user estimate the expected MPG (miles per gallon) of a vehicle as a function of the HP (Hourse Power). The user uses a slider to select the HP of interest and then the program gives four outputs. The first output is a plot with the origional data set and a fitted curve. Also, there are dotted lines on the plot that define the Standard Deviation (3 sigma). the red line on the plot will move based on the user entry to illustrate the specifc point of interst on the curve. 
+
+                        There are also three text boxes. the first one provides the average MPG expected based on the fitted curve. The second one provides the minimum expected MPG based on the standard deviation bands. The third one provides the maximum expected MPG based on the upper standard deviation band. 
+
+                        The curve fit in the code uses a smoothed spline. The blue vertical dotted lines on the curve define the splitting points. The user cannot chage that. However, the splitting was done in such a way to ensure that the fit is smooth and that the physics is captured properly.
+                        &quot;))
+ })
+
+})
+</code></pre>
 
   </article>
   <!-- Presenter Notes -->
@@ -108,13 +242,13 @@
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=3 title='Slide 4'>
+        data-slide=3 title='UI code Overview'>
          3
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=4 title='Slide 5'>
+        data-slide=4 title='server.r code Sample'>
          4
       </a>
     </li>

@@ -1,9 +1,14 @@
 library(shiny)
+library(shinyhelper)
+library(magrittr)
 shinyUI(fluidPage(
   titlePanel("Predict MPG from HP"),
   sidebarLayout(
     sidebarPanel(
-      sliderInput("sliderHP", "What is the HP of the car?", 50, 335, value = 150)
+      sliderInput("sliderHP", "What is the HP of the car?", 50, 335, value = 150),
+      hr(),
+      uiOutput(outputId = "dynamicUI"),
+      hr()
       
     ),
     mainPanel(
@@ -20,3 +25,4 @@ shinyUI(fluidPage(
     )
   )
 ))
+
