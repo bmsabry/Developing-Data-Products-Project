@@ -1,0 +1,27 @@
+---
+title: "Assignment W3"
+author: "Bassam Abdelnabi"
+date: "March 5, 2019"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Slide with Plot
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(plotly)
+library(dplyr)
+library(tidyr)
+library(quantmod)
+
+SPY <- getSymbols("SPY", auto.assign = FALSE)
+SPY <- data.frame(date=index(SPY),coredata(SPY))
+
+plot_ly(SPY, x = ~date, y = ~SPY.Open, color = ~SPY.High, type = "scatter") %>% layout(title = 'SPY price over time', xaxis = list(range = c(as.Date("2006-01-03"), as.Date("2019-05-01"))), yaxis = list(title='price')) 
+```
+
+## Empty slide
+
